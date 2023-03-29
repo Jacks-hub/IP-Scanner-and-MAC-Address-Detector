@@ -1,0 +1,38 @@
+@echo off
+
+setlocal enabledelayedexpansion
+for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /i "IPv4 Address"') do set ip_address=%%a
+set ip_address=%ip_address:~1%
+for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /i "Subnet Mask"') do set subnet_mask=%%a
+set subnet_mask=%subnet_mask:~1%
+
+set ip_prefix=%ip_address:~0,-2%
+set ip_list=
+for /l %%a in (1,1,255) do (
+    set ip=%ip_prefix%%%a
+    set ip_list=!ip_list! !ip!
+)
+
+set results=
+set i=0
+for %%a in (%ip_list%) do (
+    set /a i+=1
+    set progress=!i! / 255 * 100
+    echo Pinging IP addresses... !progress!%% - !%%a!
+    set ping_result=
+    set ping_result_raw=
+    for /f "tokens=4" %%b in ('ping -n 1 -w 100 -4 %%a ^| findstr /i "TTL"') do set ping_result_raw=%%b
+    if defined ping_result_raw set ping_result=!ping_result_raw:~5!
+    if defined ping_result (
+        for /f "tokens=2" %%c in ('arp -a %%a ^| findstr /i "dynamic"') do set mac_address=%%c
+        set mac_address=!mac_address:-=!
+        set mac_address=!mac_address: =!
+        set /a avg_ms=!ping_result!
+        set result=IP-Address: %%a, MAC Address: !mac_address!, Response Time (ms): !avg_ms!
+        set results=!results! !result!
+    )
+)
+
+echo %results% > "%userprofile%\Desktop\IPs detected.txt"
+
+echo IP address detection complete. Results saved to '%userprofile%\Desktop\IPs detected.txt'.
