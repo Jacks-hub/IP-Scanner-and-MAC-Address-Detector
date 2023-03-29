@@ -7,9 +7,9 @@ By eliminating the need to manually ping each IP address and document the corres
 
 To create a .cmd file with the code:
 
-1.Open a text editor (e.g. Notepad) on your Windows computer.
-2.Copy the code for the Secure Password Generator and paste it into a new document.
-3.Save the file with a .cmd extension (e.g. IpScanner.cmd) to a desired location on your computer.
+1. Open a text editor (e.g. Notepad) on your Windows computer.
+2. Copy the code for the Secure Password Generator and paste it into a new document.
+3. Save the file with a .cmd extension (e.g. IpScanner.cmd) to a desired location on your computer.
 
 How to use the .cmd file for Windows
 
